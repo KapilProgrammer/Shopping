@@ -1,0 +1,31 @@
+# Gradle
+.gradle/
+build/
+
+# Local config
+local.properties
+
+# Android Studio
+.idea/
+*.iml
+*.log
+*.hprof
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# APK / AAB
+*.apk
+*.aab
+
+# Keystore (IMPORTANT)
+*.jks
+*.keystore
+
+# NDK
+.cxx/
+
+# Generated files
+captures/
+.externalNativeBuild/
