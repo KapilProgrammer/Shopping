@@ -9,25 +9,50 @@ import { products } from '../../data/products'
 import { sharedStylesHorizantel } from '../../styles/shairedStyles'
 import AppButton from '../../components/buttons/AppButton'
 import { useNavigation } from '@react-navigation/native'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../store/Store'
+import { addItemToCart, removeItemFromCart, removeProductFromCart } from '../../store/reducers/CartSlice'
+import { shippingFee, taxes } from '../../constants/constants'
+// import { RootState } from '@reduxjs/toolkit/query'
 
 const CartScreen = () => {
   const navigate = useNavigation()
+  const { items } = useSelector((state: RootState) => state.cartSlice)
+  const disPatch = useDispatch()
+  const totalProductPricesSum = items.reduce((acc, item) => acc + item.sum, 0)
+  const orderTotal = totalProductPricesSum + shippingFee + taxes;
+
+  // console.log(items);
+
   return (
     <AppSafeView>
       <HomeHeader />
-      {/* <EmptyCart /> */}
-      <View style={{ paddingHorizontal: sharedStylesHorizantel,flex:1 }}>
-        <FlatList
-          data={products}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => {
-            return <CartItem {...item} />
-          }}
-          showsVerticalScrollIndicator={false}
-        />
-        <TotalView itemsPrice={5000} orderTotal={2025} />
-        <AppButton onPress={() => navigate.navigate("ChechOutScreen")} title='Continue' />
-      </View>
+      {
+        items.length > 0 ?
+          <View style={{ paddingHorizontal: sharedStylesHorizantel, flex: 1 }}>
+            <FlatList
+              data={items}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => {
+                return <CartItem
+                  {...item} price={item.sum}
+                  onReducePress={() => disPatch(removeItemFromCart(item))}
+                  onDeletePress={() => disPatch(removeProductFromCart(item))}
+                  onIncressPress={() => disPatch(addItemToCart(item))}
+                />
+              }}
+              showsVerticalScrollIndicator={false}
+            />
+            <TotalView itemsPrice={totalProductPricesSum} orderTotal={orderTotal} />
+            <AppButton onPress={() => navigate.navigate("ChechOutScreen")} title='Continue' />
+          </View>
+
+          :
+
+          <EmptyCart />
+
+      }
+
     </AppSafeView>
   )
 }

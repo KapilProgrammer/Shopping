@@ -6,8 +6,13 @@ import { AppFont } from '../../styles/fonts'
 import ProductCards from '../../components/cards/ProductCards'
 import { products } from '../../data/products'
 import { s, vs } from 'react-native-size-matters'
+import { useDispatch } from 'react-redux'
+import { addItemToCart } from '../../store/reducers/CartSlice'
 
 const HomeScreen = () => {
+
+  const dispatch = useDispatch()
+
   return (
     <AppSafeView>
       <HomeHeader />
@@ -19,7 +24,7 @@ const HomeScreen = () => {
           imageURL={item.imageURL}
           price={item.price}
           title={item.title}
-          onAddToCartPress={() => { }}
+          onAddToCartPress={() => { dispatch(addItemToCart(item)) }}
         />}
         columnWrapperStyle={{
           justifyContent: "space-between",
