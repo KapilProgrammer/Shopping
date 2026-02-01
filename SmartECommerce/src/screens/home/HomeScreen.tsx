@@ -1,17 +1,27 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import AppSafeView from '../../components/views/AppSafeView'
 import HomeHeader from '../../components/headers/HomeHeader'
-import { AppFont } from '../../styles/fonts'
 import ProductCards from '../../components/cards/ProductCards'
-import { products } from '../../data/products'
 import { s, vs } from 'react-native-size-matters'
 import { useDispatch } from 'react-redux'
 import { addItemToCart } from '../../store/reducers/CartSlice'
+import { getProductData } from '../../config/dataServices'
 
 const HomeScreen = () => {
 
   const dispatch = useDispatch()
+
+  const [products,setProduct] = useState()
+
+  const featchData = async () => {
+    const data = await getProductData()
+    setProduct(data);
+  }
+
+  useEffect(() => {
+    featchData()
+  },[])
 
   return (
     <AppSafeView>

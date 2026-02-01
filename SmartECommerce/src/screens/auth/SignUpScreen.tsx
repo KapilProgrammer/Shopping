@@ -14,6 +14,11 @@ import AppTextInputController from "../../components/inputs/AppTextInputControll
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../../config/firebase'
+import { showMessage } from 'react-native-flash-message'
+import { useDispatch } from 'react-redux'
+import { setUserData } from '../../store/reducers/useSlice'
 
 const schema = yup
     .object({
@@ -36,10 +41,43 @@ const SignUpScreen = () => {
     });
 
     const navigation = useNavigation();
+    const dispatch = useDispatch()
 
-    const onSignUpPress = () => {
-        Alert.alert("User Created");
-        navigation.navigate("MainAppBottomTabs");
+    const onSignUpPress = async (data: FormData) => {
+        try {
+            const userCredintal = await createUserWithEmailAndPassword(
+                auth,
+                data.email,
+                data.password
+            )
+
+            Alert.alert("User Created");
+            navigation.navigate("MainAppBottomTabs");
+            showMessage({
+                type: "success",
+                message: "User is successfully created"
+            })
+            const userDataObj = {
+                uid: userCredintal.user.uid
+            }
+            dispatch(setUserData(userDataObj))
+        } catch (error: any) {
+            let errorMessage = "";
+            if (error.code === "auth/email-already-in-use") {
+                errorMessage = "This email is already in use bro what Bro!!"
+            } else if (error.code === "auth/invalid-email") {
+                errorMessage = "This email address is invalid"
+            } else if (error.code === "auth/weak-password") {
+                errorMessage = "This password is too week"
+            } else {
+                errorMessage = "An error occure during sign-up"
+            }
+
+            showMessage({
+                type: "danger",
+                message: errorMessage
+            })
+        }
     };
 
 

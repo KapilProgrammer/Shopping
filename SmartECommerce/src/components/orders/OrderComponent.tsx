@@ -1,10 +1,23 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import AppText from '../texts/AppText'
 import { s, vs } from 'react-native-size-matters'
 import { AppColor } from '../../styles/colers'
+import { fetchUserOrders } from '../../config/dataServices'
 
 const OrderComponent = () => {
+
+    const [orderList,setOrderList] = useState([])
+
+    const getOrder = async() => {
+        const response = await fetchUserOrders()
+        setOrderList(response)
+    }
+
+    useEffect(() => {
+        getOrder()
+    },[])
+
     return (
         <View>
             <View style={styles.component}>

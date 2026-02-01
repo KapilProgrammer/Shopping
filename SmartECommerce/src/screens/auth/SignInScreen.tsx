@@ -13,6 +13,11 @@ import AppTextInputController from "../../components/inputs/AppTextInputControll
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../../config/firebase'
+import { showMessage } from 'react-native-flash-message'
+import { useDispatch } from 'react-redux'
+import { setUserData } from '../../store/reducers/useSlice'
 
 const schema = yup
     .object({
@@ -35,7 +40,44 @@ const SignInScreen = () => {
         resolver: yupResolver(schema),
     });
     const navigation = useNavigation()
-    const onLoginPress = () => navigation.navigate("MainAppBottomTabs");
+    const dispatch = useDispatch()
+    const onLoginPress = async (data: FormData) => {
+        try {
+            const userCredintal = await signInWithEmailAndPassword(
+                auth,
+                data.email,
+                data.password
+            )
+            navigation.navigate("MainAppBottomTabs")
+            console.log(JSON.stringify(userCredintal,null,3));
+            const userDataObj = {
+                uid: userCredintal.user.uid
+            }
+            dispatch(setUserData(userDataObj))
+            showMessage({
+                type:"success",
+                message:"Successfully Login"
+            })
+            
+        } catch (error: any) {
+            let errorMessage = ""
+            console.log(error.code);
+            
+            if(error.code === "auth/user-not-found"){
+                errorMessage = "User Not found"
+            }else if(error.code === "auth/invalid-credential"){
+                errorMessage = "Wrong email or Password"
+            }else{
+                errorMessage = "An error occure during sign-in"
+            }
+
+            showMessage({
+                type: "danger",
+                message: errorMessage
+            })
+            
+        }
+    };
     return (
         <AppSafeView style={styles.container}>
             <Image source={IMAGES.appLogo} style={styles.logo} />

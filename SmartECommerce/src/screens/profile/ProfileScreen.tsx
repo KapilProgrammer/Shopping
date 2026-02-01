@@ -13,7 +13,6 @@ const ProfileScreen = () => {
   return (
     <AppSafeView>
       <HomeHeader />
-      <AppText varient='Bold' style={{ fontSize: s(18), marginTop: vs(10) }}>Hello, Kapil</AppText>
       <View style={{ paddingHorizontal: sharedStylesHorizantel }}>
         <ProfileSectionButton title={"My Order"} onPress={() => navigater.navigate("OrderScreen")}/>
         <ProfileSectionButton title={"Language"} />
