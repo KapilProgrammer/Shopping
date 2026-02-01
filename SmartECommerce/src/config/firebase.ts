@@ -12,12 +12,12 @@ import { getStorage } from "firebase/storage";
 
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyBf0G131vc7IOsf-s3UBBryBRKJG2y9nc4",
-  authDomain: "e-commerceempo.firebaseapp.com",
-  projectId: "e-commerceempo",
-  storageBucket: "e-commerceempo.firebasestorage.app",
-  messagingSenderId: "1095047179956",
-  appId: "1:1095047179956:web:29d669da2ab6faa9caf1e1"
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
