@@ -5,11 +5,15 @@ import ProfileScreen from "../screens/profile/ProfileScreen";
 import { AppColor } from "../styles/colers";
 import { s, vs } from "react-native-size-matters";
 import {Ionicons} from "@expo/vector-icons"
+import { useTranslation } from "react-i18next";
 
 
 const Tab = createBottomTabNavigator()
 
 export default function MainAppBottomTabs(){
+
+    const {t} = useTranslation()
+
     return(
         <Tab.Navigator screenOptions={{
             headerShown:false,
@@ -24,7 +28,7 @@ export default function MainAppBottomTabs(){
                     tabBarIcon: ({color,size}) => (
                         <Ionicons name="home" size={size} color={color}/>
                     ),
-                    title:"Home"
+                    title:t("tab_home")
                 }}
             />
             <Tab.Screen name="Cart" component={CartScreen} 
@@ -32,7 +36,7 @@ export default function MainAppBottomTabs(){
                     tabBarIcon: ({color,size}) => (
                         <Ionicons name="cart" size={size} color={color}/>
                     ),
-                    title:"Cart"
+                    title:t("tab_cart")
                 }}
             />
             <Tab.Screen name="Profile" component={ProfileScreen} 
@@ -40,7 +44,7 @@ export default function MainAppBottomTabs(){
                     tabBarIcon: ({color,size}) => (
                         <Ionicons name="person" size={size} color={color}/>
                     ),
-                    title:"Profiles"
+                    title:t("tab_profile")
                 }}
             />
         </Tab.Navigator>

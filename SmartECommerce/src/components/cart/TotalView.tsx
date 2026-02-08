@@ -4,6 +4,7 @@ import { s, vs } from 'react-native-size-matters'
 import AppText from '../texts/AppText'
 import { AppColor } from '../../styles/colers'
 import { shippingFee, taxes } from '../../constants/constants'
+import { useTranslation } from 'react-i18next'
 
 interface TotalViewProps {
     itemsPrice: number;

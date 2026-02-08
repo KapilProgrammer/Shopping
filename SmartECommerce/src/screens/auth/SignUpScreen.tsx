@@ -19,23 +19,28 @@ import { auth } from '../../config/firebase'
 import { showMessage } from 'react-native-flash-message'
 import { useDispatch } from 'react-redux'
 import { setUserData } from '../../store/reducers/useSlice'
+import { useTranslation } from 'react-i18next'
 
-const schema = yup
-    .object({
-        userName: yup
-            .string()
-            .required("User name is required")
-            .min(5, "User name must be more than 5 characters"),
-        email: yup.string().email("Email is wrong").required("Email is required"),
-        password: yup
-            .string()
-            .required("Password is required")
-            .min(6, "Password must be at least 6 characters"),
-    })
-    .required();
 
-type FormData = yup.InferType<typeof schema>;
 const SignUpScreen = () => {
+    
+    const {t} = useTranslation()
+
+
+    type FormData = yup.InferType<typeof schema>;
+    const schema = yup
+        .object({
+            userName: yup
+                .string()
+                .required(t("sign_up_username_required"))
+                .min(5, t("sign_up_username_min_length")),
+            email: yup.string().email(t("sign_up_email_invalid")).required(t("sign_up_email_required")),
+            password: yup
+                .string()
+                .required(t("sign_up_password_required"))
+                .min(6, t("sign_up_password_min_length")),
+        })
+        .required();
     const { control, handleSubmit } = useForm<FormData>({
         resolver: yupResolver(schema),
     });
@@ -51,7 +56,7 @@ const SignUpScreen = () => {
                 data.password
             )
 
-            Alert.alert("User Created");
+            Alert.alert(t("sign_up_success"));
             navigation.navigate("MainAppBottomTabs");
             showMessage({
                 type: "success",
@@ -64,13 +69,13 @@ const SignUpScreen = () => {
         } catch (error: any) {
             let errorMessage = "";
             if (error.code === "auth/email-already-in-use") {
-                errorMessage = "This email is already in use bro what Bro!!"
+                errorMessage = t("sign_up_error_email_in_use")
             } else if (error.code === "auth/invalid-email") {
-                errorMessage = "This email address is invalid"
+                errorMessage = t("sign_up_error_invalid_email")
             } else if (error.code === "auth/weak-password") {
-                errorMessage = "This password is too week"
+                errorMessage = t("sign_up_error_weak_password")
             } else {
-                errorMessage = "An error occure during sign-up"
+                errorMessage = t("sign_up_error_default")
             }
 
             showMessage({
@@ -87,28 +92,28 @@ const SignUpScreen = () => {
             <AppTextInputController<FormData>
                 control={control}
                 name="userName"
-                placeholder="User Name"
+                placeholder={t("sign_up_username_placeholder")}
             />
             <AppTextInputController<FormData>
                 control={control}
                 name="email"
-                placeholder="Email"
+                placeholder={t("sign_up_email_placeholder")}
                 keyboardType="email-address"
             />
             <AppTextInputController<FormData>
                 control={control}
                 name="password"
-                placeholder="Password"
+                placeholder={t("sign_up_password_placeholder")}
                 secureTextEntry
             />
 
             <AppText style={styles.appName}>Smart E-Commerce</AppText>
             <AppButton
-                title="Create New Account"
+                title={t("sign_up_create_account_button")}
                 onPress={handleSubmit(onSignUpPress)}
             />
             <AppButton
-                title="Go To Sign In"
+                title={t("sign_up_goto_signin_button")}
                 style={styles.signInButton}
                 textColor={AppColor.primaryColor}
                 onPress={() => navigation.navigate("SignInScreen")}

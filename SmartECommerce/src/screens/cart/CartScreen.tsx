@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/Store'
 import { addItemToCart, removeItemFromCart, removeProductFromCart } from '../../store/reducers/CartSlice'
 import { shippingFee, taxes } from '../../constants/constants'
+import { useTranslation } from 'react-i18next'
 // import { RootState } from '@reduxjs/toolkit/query'
 
 const CartScreen = () => {
@@ -21,6 +22,7 @@ const CartScreen = () => {
   const disPatch = useDispatch()
   const totalProductPricesSum = items.reduce((acc, item) => acc + item.sum, 0)
   const orderTotal = totalProductPricesSum + shippingFee + taxes;
+  const {t} = useTranslation()
 
   // console.log(items);
 
@@ -44,7 +46,7 @@ const CartScreen = () => {
               showsVerticalScrollIndicator={false}
             />
             <TotalView itemsPrice={totalProductPricesSum} orderTotal={orderTotal} />
-            <AppButton onPress={() => navigate.navigate("ChechOutScreen")} title='Continue' />
+            <AppButton onPress={() => navigate.navigate("ChechOutScreen")} title={t("cart_continue_button")} />
           </View>
 
           :

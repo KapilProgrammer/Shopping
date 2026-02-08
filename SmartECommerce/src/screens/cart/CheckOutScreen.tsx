@@ -18,23 +18,26 @@ import { db } from '../../config/firebase'
 import { showMessage } from 'react-native-flash-message'
 import { useNavigation } from '@react-navigation/native'
 import { exptyCart } from '../../store/reducers/CartSlice'
+import { useTranslation } from 'react-i18next'
 
-const scema = yup.object({
-    fullName: yup.string()
-    .required("Name is Required")
-                .min(3,"Name must be at least 3 Character"),
-    phoneNumber: yup.string()
-                .required("Phone Number is Require")
-                .matches(/^[0-9]+$/,"Mest be only digits")
-                .min(10,"Phone Number must be at least 10 Digits"),
-    detailAddress: yup.string()
-    .required()
-    .min(15,"Please provide a detailed Address with at least 15 chracter")
-}).required();
-
-type FormData = yup.InferType<typeof scema>
 
 const CheckOutScreen = () => {
+    const {t} = useTranslation()
+    
+    const scema = yup.object({
+        fullName: yup.string()
+        .required(t("checkout_name_required"))
+                    .min(3,t("checkout_name_min_length")),
+        phoneNumber: yup.string()
+                    .required(t("checkout_phone_required"))
+                    .matches(/^[0-9]+$/,t("checkout_phone_digits"))
+                    .min(10,t("checkout_phone_min_length")),
+        detailAddress: yup.string()
+        .required(t("checkout_address_required"))
+        .min(15,t("checkout_address_min_length"))
+    }).required();
+    
+    type FormData = yup.InferType<typeof scema>
 
     const {control,handleSubmit} = useForm({
         resolver: yupResolver(scema)
@@ -65,7 +68,7 @@ const CheckOutScreen = () => {
 
             showMessage({
                 type:"success",
-                message:"Order Places Successfully"
+                message:t("checkout_success_message")
             })
 
             navigation.goBack()
@@ -75,7 +78,7 @@ const CheckOutScreen = () => {
             console.error("Error saving order: ",error)
             showMessage({
                 type:"danger",
-                message:"Error Happens"
+                message:t("checkout_error_message")
             })
         }
     }
@@ -88,9 +91,9 @@ const CheckOutScreen = () => {
         <AppSafeView>
             <View style={{ paddingHorizontal: sharedStylesHorizantel }}>
                 <View style={styles.inputContainser}>
-                    <AppTextInputController control={control} name={"fullName"} placeholder='Full Name' />
-                    <AppTextInputController control={control} name={"phoneNumber"} placeholder='Phone Number' />
-                    <AppTextInputController control={control} name={"detailAddress"} placeholder='Detailed Address' />
+                    <AppTextInputController control={control} name={"fullName"} placeholder={t("checkout_fullname_placeholder")} />
+                    <AppTextInputController control={control} name={"phoneNumber"} placeholder={t('checkout_phone_placeholder')} />
+                    <AppTextInputController control={control} name={"detailAddress"} placeholder={t('checkout_address_placeholder')} />
                 </View>
             </View>
             <View style={styles.bottomButtonContainser}>

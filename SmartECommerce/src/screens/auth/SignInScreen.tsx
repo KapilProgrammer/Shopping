@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useTransition } from 'react'
 import AppSafeView from '../../components/views/AppSafeView'
 import { sharedStylesHorizantel } from '../../styles/shairedStyles'
 import { IMAGES } from '../../constants/images-paths'
@@ -18,29 +18,34 @@ import { auth } from '../../config/firebase'
 import { showMessage } from 'react-native-flash-message'
 import { useDispatch } from 'react-redux'
 import { setUserData } from '../../store/reducers/useSlice'
+import { useTranslation } from 'react-i18next'
 
-const schema = yup
-    .object({
-        email: yup
-            .string()
-            .email("Please enter a valid email")
-            .required("Email is required"),
-        password: yup
-            .string()
-            .required("Password is required")
-            .min(6, "Password must be at least 6 characters"),
-    })
-    .required();
-
-// 3- Define the type
-type FormData = yup.InferType<typeof schema>;
 
 const SignInScreen = () => {
+    const {t} = useTranslation()
+    
+    const schema = yup
+        .object({
+            email: yup
+                .string()
+                .email(t("sign_in_email_invalid"))
+                .required(t("sign_in_email_required")),
+            password: yup
+                .string()
+                .required(t("sign_in_password_required"))
+                .min(6, t("sign_in_password_min_length")),
+        })
+        .required();
+    
+    // 3- Define the type
+    type FormData = yup.InferType<typeof schema>;
     const { control, handleSubmit } = useForm<FormData>({
         resolver: yupResolver(schema),
     });
     const navigation = useNavigation()
     const dispatch = useDispatch()
+
+
     const onLoginPress = async (data: FormData) => {
         try {
             const userCredintal = await signInWithEmailAndPassword(
@@ -64,11 +69,11 @@ const SignInScreen = () => {
             console.log(error.code);
             
             if(error.code === "auth/user-not-found"){
-                errorMessage = "User Not found"
+                errorMessage = t("sign_in_error_user_not_found")
             }else if(error.code === "auth/invalid-credential"){
-                errorMessage = "Wrong email or Password"
+                errorMessage = t("sign_in_error_invalid_credential")
             }else{
-                errorMessage = "An error occure during sign-in"
+                errorMessage = t("sign_in_error_default")
             }
 
             showMessage({
@@ -84,19 +89,19 @@ const SignInScreen = () => {
             <AppTextInputController<FormData>
                 control={control}
                 name="email"
-                placeholder="Email"
+                placeholder={t("sign_in_email_placeholder")}
                 keyboardType="email-address"
             />
             <AppTextInputController<FormData>
                 control={control}
                 name="password"
-                placeholder="Password"
+                placeholder={t("sign_in_password_placeholder")}
                 secureTextEntry
             />
 
             <AppText style={styles.appName}>Smart E-Commerce</AppText>
-            <AppButton title='Login' onPress={handleSubmit(onLoginPress)} />
-            <AppButton title='Sign Up'
+            <AppButton title={t("sign_in_login_button")} onPress={handleSubmit(onLoginPress)} />
+            <AppButton title={t("sign_in_signup_button")}
                 style={styles.registerButton}
                 textColor={AppColor.primaryColor}
                 onPress={() => navigation.navigate("SignUpScreen")}
