@@ -1,3 +1,69 @@
+// import { Button, StyleSheet, Text, View } from 'react-native'
+// import React, { useEffect, useState } from 'react'
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// const App = () => {
+//   const [expense, setExpense] = useState(0);
+
+//   const storeData = async (value) => {
+//     try {
+//       await AsyncStorage.setItem('totalExpenses', value);
+//     } catch (e) {
+//       // saving error
+//     }
+//   };
+
+//   // Read Data
+//   const getData = async () => {
+//     try {
+//       const value = await AsyncStorage.getItem('totalExpenses');
+//       if (value !== null) {
+//         console.log(value);
+//         setExpense(+value)
+//       }
+//     } catch (e) {
+//       // error reading value
+//     }
+//   };
+
+//   useEffect(() => {
+//     getData()
+//   },[])
+
+//   // Adding Expense
+//   const totalExpense = () => {
+//     const newExpense = expense + 10
+//     setExpense(newExpense)
+//     storeData(newExpense?.toString())
+//   }
+
+//   const removeData = async () => {
+//     try {
+//       await AsyncStorage.removeItem('totalExpenses');
+//     } catch (error) {
+      
+//     }
+//   }
+
+//   return (
+//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+//       <Text style={{ fontSize: 20 }}>Expense App</Text>
+//       <Text style={{ fontSize: 30 }}>Total Expense : {expense}</Text>
+//       <Button title='Add Expense' onPress={totalExpense} />
+//       <Button title='Remove Expense' onPress={removeData} />
+//     </View>
+//   )
+// }
+
+// export default App
+
+// const styles = StyleSheet.create({})
+
+
+
+
+
+
 import 'react-native-gesture-handler';
 import React from 'react';
 import { StyleSheet, Platform, StatusBar, ViewStyle, ActivityIndicator } from 'react-native';
